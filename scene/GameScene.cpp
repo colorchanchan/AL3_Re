@@ -36,6 +36,13 @@ void GameScene::Initialize() {
 	textureHandle_ = TextureManager::Load("player.png");
 	titleHandle_ = TextureManager::Load("title.png");
 	titleSprite_ = Sprite::Create(titleHandle_, {640.0f, 360.0f}, {1.0f, 1.0f, 1.0f, 1.0f}, {0.5f,0.5f});
+	titleHandle2_ = TextureManager::Load("title2.png");
+	titleSprite2_ = Sprite::Create(titleHandle2_, {640.0f, 520.0f}, {1.0f, 1.0f, 1.0f, 1.0f}, {0.5f, 0.5f});
+	gameOverHandle_ = TextureManager::Load("gameover.png");
+	gameOverSprite_ = Sprite::Create(gameOverHandle_, {640.0f, 360.0f}, {1.0f, 1.0f, 1.0f, 1.0f}, {0.5f, 0.5f});
+	gameClearHandle_ = TextureManager::Load("gameclear.png");
+	gameClearSprite_ = Sprite::Create(gameClearHandle_, {640.0f, 360.0f}, {1.0f, 1.0f, 1.0f, 1.0f}, {0.5f, 0.5f});
+
 	// 3Dモデルの生成
 
 	TextureManager::Load("Reticle.png");
@@ -47,7 +54,7 @@ void GameScene::Initialize() {
 	// ビュープロジェクションの初期化
 	viewProjection_.Initialize();
 
-	// 自キャラの生成
+	// 自キャラの生成5
 	player_ = new Player();
 	player_->Initialize(model_, textureHandle_, {0.0f, 0.0f, 0.0f});
 	Vector3 playerPosition(0, 0, 30);
@@ -62,11 +69,22 @@ void GameScene::Initialize() {
 	LoadEnemyPopData();
 
 	Changeflag = false;
+	Gameover = false;
+	Gameclear = false;
 }
 
 void GameScene::Update() {
+	timer++;
+	if (timer > 60) {
+		titleSprite2_->SetColor({1.0f, 1.0f, 1.0f, 0.0f});
+	}
+	if (timer > 120) {
+		titleSprite2_->SetColor({1.0f, 1.0f, 1.0f, 1.0f});
+		timer = 0;
+	}
+	
 	if (Changeflag == true) {
-
+		
 		player_->Update(viewProjection_);
 		UpdateEnemyPopCommands();
 
@@ -157,9 +175,18 @@ void GameScene::Draw() {
 	/// ここに前景スプライトの描画処理を追加できる
 	/// </summary>
 	if (Changeflag == false) {
+		
 		titleSprite_->Draw();
+		titleSprite2_->Draw();
+
 	} else {
 		player_->DrawUI();
+	}
+	if (Gameover == true) {
+		gameOverSprite_->Draw();
+	}
+	if (Gameclear == true) {
+		gameClearSprite_->Draw();
 	}
 	// スプライト描画後処理
 	Sprite::PostDraw();
@@ -192,6 +219,7 @@ void GameScene::CheckAllcollsions() {
 		if (distance <= r * r) {
 			player_->OnCollision();
 			bullet->OnCollision();
+			Gameover = true;
 		}
 	}
 #pragma endregion
@@ -212,6 +240,7 @@ void GameScene::CheckAllcollsions() {
 			                    (enemy->GetRadius() + playerbullet->GetRadius())) {
 				enemy->OnCollision();
 				playerbullet->OnCollision();
+				Gameclear = true;
 			}
 		}
 	}

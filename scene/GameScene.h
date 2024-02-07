@@ -52,6 +52,12 @@ public: // メンバ関数
 
 	bool Changeflag;
 
+	bool Gameover;
+
+	bool Gameclear;
+
+	int timer;
+
 private: // メンバ変数
 	DirectXCommon* dxCommon_ = nullptr;
 	Input* input_ = nullptr;
@@ -61,6 +67,13 @@ private: // メンバ変数
 	uint32_t textureHandle_ = 0;
 	uint32_t titleHandle_ = 0;
 	Sprite* titleSprite_ = nullptr;
+	uint32_t textureHandle2_ = 0;
+	uint32_t titleHandle2_ = 0;
+	Sprite* titleSprite2_ = nullptr;
+	uint32_t gameOverHandle_ = 0;
+	Sprite* gameOverSprite_ = nullptr;
+	uint32_t gameClearHandle_ = 0;
+	Sprite* gameClearSprite_ = nullptr;
 	// 3Dモデルデータ
 	Model* model_ = nullptr;
 	Model* skyDomeModel_ = nullptr;

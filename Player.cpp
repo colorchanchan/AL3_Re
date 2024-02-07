@@ -150,13 +150,13 @@ void Player::Update(const ViewProjection& viewProjection) {
 	    Add(posNear, Multiply(kDistancetestObject, mouseDirection));
 	worldTransform3DReticle_.UpdateMatrix();
 
-	ImGui::Begin("Player");
+	/*ImGui::Begin("Player");
 	ImGui::Text("Near:(%+.2f,%+.2f,%.2f)", posNear.x, posNear.y, posNear.z);
 	ImGui::Text("Far:(%+.2f,%+.2f,%.2f)", posFar.x, posFar.y, posFar.z);
 	ImGui::Text(
 	    "3DRetixle:(%+.2f,%+.2f,%.2f)", worldTransform3DReticle_.translation_.x,
 	    worldTransform3DReticle_.translation_.y, worldTransform3DReticle_.translation_.z);
-	ImGui::End();
+	ImGui::End();*/
 #pragma endregion
 
 
@@ -168,10 +168,10 @@ void Player::Update(const ViewProjection& viewProjection) {
 	    worldTransform_.translation_.z};
 
 	// デバッグ
-	ImGui::Begin("Debug");
+	/*ImGui::Begin("Debug");
 	ImGui::Text("Toggle Camera Flag : 0 key");
 	ImGui::SliderFloat3("player", imputFloat3, -30.0f, 30.0f);
-	ImGui::End();
+	ImGui::End();*/
 	worldTransform_.translation_.x = imputFloat3[0];
 	worldTransform_.translation_.y = imputFloat3[1];
 	worldTransform_.translation_.z = imputFloat3[2];
@@ -287,54 +287,54 @@ void Player::SetReticle(const ViewProjection viewProjection) {
 	    Matrix4x4 matViewProjectionViewport =
 	        Multiply(Multiply(viewProjection.matView, viewProjection.matProjection), matViewport);
 	    positionReticle = Transform(positionReticle, matViewProjectionViewport);
-	   //sprite2DReticle_->SetPosition(Vector2(positionReticle.x, positionReticle.y));
+	    // sprite2DReticle_->SetPosition(Vector2(positionReticle.x, positionReticle.y));
 
+	    // マウス用　一時削除
+	    /* POINT mousePosition;
 
-		// マウス用　一時削除
-	   /* POINT mousePosition;
-	  
-	    GetCursorPos(&mousePosition);
-	  
-	    HWND hwnd = WinApp::GetInstance()->GetHwnd();
-	    ScreenToClient(hwnd, &mousePosition);
-	    sprite2DReticle_->SetPosition({(float)mousePosition.x, (float)mousePosition.y});*/
+	     GetCursorPos(&mousePosition);
 
-		XINPUT_STATE joyState;
+	     HWND hwnd = WinApp::GetInstance()->GetHwnd();
+	     ScreenToClient(hwnd, &mousePosition);
+	     sprite2DReticle_->SetPosition({(float)mousePosition.x, (float)mousePosition.y});*/
+
+	    XINPUT_STATE joyState;
 	    Vector2 spritePosition = sprite2DReticle_->GetPosition();
 
-		if (Input::GetInstance()->GetJoystickState(0, joyState)) {
+	    if (Input::GetInstance()->GetJoystickState(0, joyState)) {
 		    spritePosition.x += (float)joyState.Gamepad.sThumbRX / SHRT_MAX * 5.0f;
 		    spritePosition.y -= (float)joyState.Gamepad.sThumbRY / SHRT_MAX * 5.0f;
 
-			sprite2DReticle_->SetPosition(spritePosition);
-		}
+		    sprite2DReticle_->SetPosition(spritePosition);
+	    }
 
-		Matrix4x4 matVPV = Multiply(Multiply(viewProjection.matView, viewProjection.matProjection), matViewport);
+	    Matrix4x4 matVPV =
+	        Multiply(Multiply(viewProjection.matView, viewProjection.matProjection), matViewport);
 	    Matrix4x4 matInverseVPV = Inverse(matVPV);
 
-		Vector3 posNear = {
+	    Vector3 posNear = {
 	        (float)sprite2DReticle_->GetPosition().x, (float)sprite2DReticle_->GetPosition().y, 0};
-	    
-		Vector3 posFar = {
+
+	    Vector3 posFar = {
 	        (float)sprite2DReticle_->GetPosition().x, (float)sprite2DReticle_->GetPosition().y, 1};
 
 	    posNear = Transform(posNear, matInverseVPV);
 	    posFar = Transform(posFar, matInverseVPV);
 
-		Vector3 mouseDirection = Subtract(posFar, posNear);
+	    Vector3 mouseDirection = Subtract(posFar, posNear);
 	    mouseDirection = Normalize(mouseDirection);
 
 	    const float kDistancetestObject = 100.0f;
-	    
-		worldTransform3DReticle_.translation_ =
+
+	    worldTransform3DReticle_.translation_ =
 	        Add(posNear, Multiply(kDistancetestObject, mouseDirection));
 	    worldTransform3DReticle_.UpdateMatrix();
-
-		ImGui::Begin("Player");
+}
+		/*ImGui::Begin("Player");
 	    ImGui::Text("Near:(%+.2f,%+.2f,%.2f)", posNear.x, posNear.y, posNear.z);
 	    ImGui::Text("Far:(%+.2f,%+.2f,%.2f)", posFar.x, posFar.y, posFar.z);
 	    ImGui::Text(
 	        "3DRetixle:(%+.2f,%+.2f,%.2f)", worldTransform3DReticle_.translation_.x,
 	        worldTransform3DReticle_.translation_.y, worldTransform3DReticle_.translation_.z);
 	    ImGui::End();
-}
+}*/
